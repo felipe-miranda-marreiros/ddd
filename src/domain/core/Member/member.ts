@@ -11,15 +11,15 @@ export class Member extends AggregateRoot {
     this._phoneNumber = phoneNumber
   }
 
-  static create(username: string, password: string, id?: string): Member {
-    return new Member(username, password, id)
+  static create(username: string, phoneNumber: string, id?: string): Member {
+    return new Member(username, phoneNumber, id)
   }
 
   getName(): string {
     return this._name
   }
 
-  getPassword(): string {
+  getPhoneNumber(): string {
     return this._phoneNumber
   }
 }

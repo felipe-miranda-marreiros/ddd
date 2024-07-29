@@ -1,16 +1,16 @@
 import { User } from '@/domain'
-import { CreateUserCommandRequest, UserCommand } from './CreateUserCommand'
 import { UserRepository } from '../../repository/UserRepository'
+import { CreateUserCommand, UserCommand } from '../commands'
 
-export class CreateUserCommandHandler implements UserCommand.CreateUserCommand {
-  private readonly createUserRepository: UserRepository.CreateUser
+export class CreateUserCommandHandler implements UserCommand.CreateUser {
+  constructor(
+    private readonly createUserRepository: UserRepository.CreateUser,
+    private readonly getByIdRepository: UserRepository.GetById
+  ) {}
 
-  constructor(createUserRepository: UserRepository.CreateUser) {
-    this.createUserRepository = createUserRepository
-  }
-
-  async create(command: CreateUserCommandRequest): Promise<void> {
-    const user = User.create(command.username, command.password)
+  async create(command: CreateUserCommand): Promise<void> {
+    const user = await this.getByIdRepository()
+    const user = User.create(command)
     await this.createUserRepository.create(user)
   }
 }

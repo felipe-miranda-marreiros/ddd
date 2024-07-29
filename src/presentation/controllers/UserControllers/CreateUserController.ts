@@ -1,14 +1,14 @@
-import { CreateUserCommandRequest, UserCommand } from '@/application'
+import { CreateUserCommand, UserCommand } from '@/application'
 import { Controller } from '../../interfaces/controller'
 
 export class CreateUserController implements Controller {
-  private readonly createUserCommand: UserCommand.CreateUserCommand
+  private readonly createUserCommand: UserCommand.CreateUser
 
-  constructor(createUserCommand: UserCommand.CreateUserCommand) {
+  constructor(createUserCommand: UserCommand.CreateUser) {
     this.createUserCommand = createUserCommand
   }
 
-  async handle(request: CreateUserCommandRequest): Promise<any> {
+  async handle(request: CreateUserCommand): Promise<any> {
     try {
       await this.createUserCommand.create(request)
     } catch (error) {

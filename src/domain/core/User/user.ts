@@ -1,25 +1,40 @@
-import { UUID } from '@/domain/helpers'
 import { AggregateRoot } from '@/domain/shared'
+import { UserCreatedDomainEvent } from './events/UserCreatedDomainEvent'
+import { UUID } from '@/domain/helpers'
 
-export class User extends AggregateRoot {
-  private readonly _username: string
-  private readonly _password: string
+interface UserProps {
+  username: string
+  password: string
+  memberId?: string
+  adminId?: string
+}
 
-  private constructor(username: string, password: string, id?: string) {
-    super(id ?? UUID())
-    this._username = username
-    this._password = password
+export class User extends AggregateRoot<UserProps> {
+  private constructor(props: UserProps, id?: string) {
+    super(props, id)
   }
 
-  static create(username: string, password: string, id?: string): User {
-    return new User(username, password, id)
+  static create(props: UserProps, id?: string): User {
+    const user = new User(props, id)
+    user.addEvent(
+      new UserCreatedDomainEvent({
+        aggregateId: user.id,
+        username: user.values.username,
+        password: user.values.password
+      })
+    )
+    return user
   }
 
-  getUsername(): string {
-    return this._username
+  createMemberProfile() {
+    if (this.props.memberId) {
+      return new Error('Usuário já possui um perfil de administrador')
+    }
+    this.props.memberId = UUID()
+    return this.props.memberId
   }
 
-  getPassword(): string {
-    return this._password
+  get values(): UserProps {
+    return this.props
   }
 }
