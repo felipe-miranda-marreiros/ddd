@@ -6,7 +6,7 @@ interface CreateUserEventAttributes {
 }
 
 export class UserCreatedDomainEvent extends DomainEvent implements CreateUserEventAttributes {
-  static readonly EVENT_NAME = 'User Created'
+  static readonly EVENT_NAME = 'User.Created'
   readonly username: string
   readonly password: string
 

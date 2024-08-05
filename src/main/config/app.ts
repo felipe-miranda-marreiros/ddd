@@ -1,13 +1,18 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
 import { createUserControllerFactory } from '../factories/UserControllers/CreateUserControllerFactory'
+import { Controller } from '@/presentation/contracts/controller'
 
 const app = express()
 
 app.use(express.json())
 
-app.post('/create-user', async (req, res) => {
-  createUserControllerFactory().handle(req.body)
-  res.status(200).json({ ok: '200' })
-})
+function expressRouteAdapter(controller: Controller) {
+  return async (req: Request, res: Response) => {
+    const httpResponse = await controller.handle({ body: req.body })
+    res.status(httpResponse.statusCode).json(httpResponse.body)
+  }
+}
+
+app.post('/create-user', expressRouteAdapter(createUserControllerFactory()))
 
 export default app

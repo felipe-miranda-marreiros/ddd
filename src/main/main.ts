@@ -1,4 +1,4 @@
-import { prisma } from '@/infra'
+import { prisma } from '@/infrastructure'
 
 prisma
   .connect()

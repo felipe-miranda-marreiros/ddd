@@ -2,19 +2,19 @@ import { AggregateRoot } from '@/domain/shared'
 import { UserCreatedDomainEvent } from './events/UserCreatedDomainEvent'
 import { UUID } from '@/domain/helpers'
 
-interface UserProps {
+interface UserModel {
   username: string
   password: string
   memberId?: string
   adminId?: string
 }
 
-export class User extends AggregateRoot<UserProps> {
-  private constructor(props: UserProps, id?: string) {
+export class User extends AggregateRoot<UserModel> {
+  private constructor(props: UserModel, id?: string) {
     super(props, id)
   }
 
-  static create(props: UserProps, id?: string): User {
+  static create(props: UserModel, id?: string): User {
     const user = new User(props, id)
     user.addEvent(
       new UserCreatedDomainEvent({
@@ -34,7 +34,7 @@ export class User extends AggregateRoot<UserProps> {
     return this.props.memberId
   }
 
-  get values(): UserProps {
+  get values(): UserModel {
     return this.props
   }
 }
